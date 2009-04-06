@@ -1,0 +1,27 @@
+h1. auto_update_stylesheets
+
+h2. What does it do?
+
+It watches each of the external stylesheets included on a page. Whenever changes are detected, they are reflected in real-time on the page.
+
+h2. How do I use it?
+
+Just include auto_update_stylesheets.js in your page, and call $.autoUpdateStylesheets() on dom-ready.
+
+h2. What are the restrictions/dependencies?
+
+* jQuery is required
+* all stylesheets must be in the same domain
+* you must have access to edit the source stylesheet
+
+h2. What's the point of this?
+
+My CSS workflow typically involves writing my stylesheets directly in Firefox using the Web Developer Toolbar. I like to see my changes in real-time without having to refresh the page. This has some major shortcomings since Web Deveoper Toolbar is not intended to be text editor. I'd much prefer to use my editor of choice and see the CSS rendering in real-time.
+
+The second big win comes later when I need to fix my CSS in IE. With this script I can open IE, Firefox, and Safari and see how my changes affect each browser in real-time.
+
+h2. What's next?
+
+* make a bookmarklet
+* remove jQuery dependency (or at least include it in the bookmarklet)
+* remove same-domain dependency (no idea how to accomplish this)
