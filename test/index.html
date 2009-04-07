@@ -6,13 +6,23 @@
   <script src="../auto_update_stylesheets.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(function() {
-      $.autoUpdateStylesheets();
+      $('#update').change(function() {
+        if ($(this).is(":checked")) {
+          $.autoUpdateStylesheets();
+        } else {
+          $.autoUpdateStylesheets('disable');
+        }
+      });
+      $('#update').change();
     });
   </script>
 </head>
 <body>
   
   Make changes to test.css and see them live (no refresh necessary).
+  <br />
+  <label for="update">Enabled</label>
+  <input type="checkbox" id="update" checked="checked" />
 
 </body>
 

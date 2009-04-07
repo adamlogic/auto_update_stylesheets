@@ -1,10 +1,19 @@
-$.autoUpdateStylesheets = function() {
+$.autoUpdateStylesheets = function(enable_or_disable) {
   var linkElements = $('head link'), index = -1;
 
-  normalizeQueryStrings();
-  compareNextStyleSheet();
+  if (enable_or_disable == 'disable') {
+    stop();
+    return
+  }
+
+  if (!data('initialized')) {
+    normalizeQueryStrings();
+    data("initialized", true);
+  }
+  start();
 
   function compareNextStyleSheet() {
+    if (data('timeout') == false) return;
     var link = getNextLink(),
         url = link.href.replace(/timestamp=\d+/, 'timestamp=' + new Date().getTime());
 
@@ -16,9 +25,23 @@ $.autoUpdateStylesheets = function() {
         }
       }, 
       complete: function() {
-        setTimeout(compareNextStyleSheet, 100);
+        data('timeout', setTimeout(compareNextStyleSheet, 100));
       }
     });
+  }
+
+  function data(name, val) {
+    return linkElements.data("autoUpdateStylesheets." + name, val);
+  }
+
+  function stop() {
+    clearTimeout(data('timeout'));
+    data('timeout', false);
+  }
+
+  function start() {
+    if (!data("timeout"))
+      data('timeout', setTimeout(compareNextStyleSheet, 100));
   }
 
   function getNextLink() {
