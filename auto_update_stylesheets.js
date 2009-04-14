@@ -2,7 +2,7 @@
 
   var initialized = null, timeout = null;
 
-  $.autoUpdateStylesheets = function(enable_or_disable) {
+  $.autoUpdateStylesheets = function(toggle) {
     var linkElements = $('head link'), index = -1;
 
     if (!initialized) {
@@ -10,14 +10,20 @@
       initialized = true;
     }
 
-    if (enable_or_disable == 'disable') {
-      stop();
-    } else {
-      start();
+    switch(toggle) {
+      case 'disable':
+        stop();
+        break;
+      case 'toggle':
+      case true:
+        timeout ? stop() : start();
+        break;
+      default:
+        start();
     }
 
     function stop() {
-      clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
       timeout = false;
     }
 

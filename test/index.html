@@ -12,8 +12,12 @@
         } else {
           $.autoUpdateStylesheets('disable');
         }
+      }).change();
+
+      $('#toggle').click(function() {
+        $.autoUpdateStylesheets('toggle');
+        return false;
       });
-      $('#update').change();
     });
   </script>
 </head>
@@ -23,6 +27,8 @@
   <br />
   <label for="update">Enabled</label>
   <input type="checkbox" id="update" checked="checked" />
+  <br />
+  <a href="#" id="toggle">toggle (does not affect checkbox)</a>
 
 </body>
 
