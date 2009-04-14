@@ -1,20 +1,33 @@
 (function($) {
+
+  var initialized = null, timeout = null;
+
   $.autoUpdateStylesheets = function(enable_or_disable) {
     var linkElements = $('head link'), index = -1;
 
+    if (!initialized) {
+      normalizeQueryStrings();
+      initialized = true;
+    }
+
     if (enable_or_disable == 'disable') {
       stop();
-      return
+    } else {
+      start();
     }
 
-    if (!data('initialized')) {
-      normalizeQueryStrings();
-      data("initialized", true);
+    function stop() {
+      clearTimeout(timeout);
+      timeout = false;
     }
-    start();
+
+    function start() {
+      if (!timeout) timeout = setTimeout(compareNextStyleSheet, 100);
+    }
 
     function compareNextStyleSheet() {
-      if (data('timeout') == false) return;
+      if (!timeout) return;
+
       var link = getNextLink(),
           url = link.href.replace(/timestamp=\d+/, 'timestamp=' + new Date().getTime());
 
@@ -26,23 +39,9 @@
           }
         }, 
         complete: function() {
-          data('timeout', setTimeout(compareNextStyleSheet, 100));
+          timeout = setTimeout(compareNextStyleSheet, 100);
         }
       });
-    }
-
-    function data(name, val) {
-      return linkElements.data("autoUpdateStylesheets." + name, val);
-    }
-
-    function stop() {
-      clearTimeout(data('timeout'));
-      data('timeout', false);
-    }
-
-    function start() {
-      if (!data("timeout"))
-        data('timeout', setTimeout(compareNextStyleSheet, 100));
     }
 
     function getNextLink() {
@@ -54,9 +53,11 @@
       linkElements.each(function(i, link) {
         var url = link.href;
         if (url.indexOf('?') == -1) url += '?';
-        url += '&timestamp=0000';
+        url += '&timestamp=0';
         $(link).attr('href', url);
       });
     }
+
   }
+
 })(jQuery);
