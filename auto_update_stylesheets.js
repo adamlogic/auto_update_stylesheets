@@ -28,7 +28,7 @@
     }
 
     function start() {
-      if (!timeout) timeout = setTimeout(compareNextStyleSheet, 100);
+      if (!timeout) timeout = setTimeout(compareNextStyleSheet, 300);
     }
 
     function compareNextStyleSheet() {
