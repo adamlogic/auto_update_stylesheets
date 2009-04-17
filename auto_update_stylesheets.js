@@ -3,7 +3,7 @@
   var initialized = null, timeout = null;
 
   $.autoUpdateStylesheets = function(toggle) {
-    var linkElements = $('head link'), index = -1;
+    var linkElements = $('head link[rel=stylesheet]'), index = -1;
 
     if (!initialized) {
       normalizeQueryStrings();
