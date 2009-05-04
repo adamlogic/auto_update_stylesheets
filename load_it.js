@@ -1,8 +1,10 @@
 (function() {
 
+  var script = null;
+
   // load jQuery if it's not already there
   if (typeof jQuery == 'undefined') {
-    var script = document.createElement('script');
+    script = document.createElement('script');
     script.setAttribute('src', 'http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js');
     document.getElementsByTagName('head')[0].appendChild(script);
   }
@@ -14,6 +16,8 @@
     if (typeof jQuery == 'undefined') {
       return setTimeout(startPollingIfJQueryIsLoaded, 300);
     } else {
+
+      if (script) jQuery.noConflict();
 
       (function($) {
 
