@@ -1,6 +1,6 @@
 (function($) {
 
-  var initialized = null, timeout = null;
+  var initialized = null;
 
   $.autoUpdateStylesheets = function(toggle) {
     var linkElements = $('head link[rel=stylesheet]'), index = -1;
@@ -16,25 +16,27 @@
         break;
       case 'toggle':
       case true:
-        timeout ? stop() : start();
+        $.autoUpdateStylesheetsTimeout ? stop() : start();
         break;
       default:
         start();
     }
 
     function stop() {
-      if (timeout) clearTimeout(timeout);
-      timeout = false;
+      showMessage('Stylesheets are now frozen.');
+      if ($.autoUpdateStylesheetsTimeout) clearTimeout($.autoUpdateStylesheetsTimeout);
+      $.autoUpdateStylesheetsTimeout = false;
     }
 
     function start() {
-      if (!timeout) timeout = setTimeout(compareNextStyleSheet, 300);
+      showMessage('Stylesheet changes will be reflected in real-time.');
+      if (!$.autoUpdateStylesheetsTimeout) $.autoUpdateStylesheetsTimeout = setTimeout(compareNextStyleSheet, 300);
     }
 
     function compareNextStyleSheet() {
-      if (!timeout) return;
+      if (!$.autoUpdateStylesheetsTimeout) return;
 
-      var link = getNextLink(),
+      var link = getNextLinkElement(),
           url = link.href.replace(/timestamp=\d+/, 'timestamp=' + new Date().getTime());
 
       $.ajax({
@@ -45,12 +47,12 @@
           }
         }, 
         complete: function() {
-          timeout = setTimeout(compareNextStyleSheet, 100);
+          $.autoUpdateStylesheetsTimeout = setTimeout(compareNextStyleSheet, 300);
         }
       });
     }
 
-    function getNextLink() {
+    function getNextLinkElement() {
       index = (index + 1) % linkElements.length;
       return linkElements[index];
     }
@@ -62,6 +64,18 @@
         url += '&timestamp=0';
         $(link).attr('href', url);
       });
+    }
+
+    function showMessage(message) {
+      var messageContainer = $('<div style="position: fixed; top: 0; padding: 15px 0; width: 100%; text-align: center;" />');
+      messageContainer.append('<span style="border: 1px solid #333; padding: 5px 10px; background: #cec; font-size: 14px" />');
+      messageContainer.children().html(message);
+
+      $('body').prepend(messageContainer);
+
+      setTimeout(function() {
+        messageContainer.fadeOut('slow', function() { $(this).remove() });
+      }, 2500);
     }
 
   }
